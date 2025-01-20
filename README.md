@@ -26,6 +26,9 @@ To get started with the Constellation Guessing Game, follow these steps:
 
 3. **Open `index.html` in Your Browser**:
    Simply open the `index.html` file in your preferred web browser to start playing the game.
+
+
+
 Or just check out the Vercel link.
 
 ## Technologies Used
