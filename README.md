@@ -8,7 +8,7 @@ Welcome to the Constellation Guessing Game! This interactive web application all
 - **Draggable Stars**: Move stars around the screen by clicking and dragging them.
 - **Connect Stars**: Stars that are close to each other will automatically connect with lines, forming constellations.
 - **Dynamic Effects**: Stars glow and change color when created, adding a visual appeal to the game.
-- **Responsive Design**: The game is designed to work on various screen sizes.
+- **Removable Connections**: You can easily remove unwanted connections by clicking on them.
 
 ## Getting Started
 
