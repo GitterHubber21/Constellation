@@ -1,6 +1,6 @@
-# Constellation Guessing Game
+# Constellation Creating Game
 
-Welcome to the Constellation Guessing Game! This interactive web application allows users to create and connect stars in a virtual space, simulating a constellation-building experience. The game is designed to be fun and engaging, encouraging creativity and exploration.
+Welcome to the Constellation Guessing Game! This interactive web application allows users to create and connect stars in a virtual space, simulating a constellation-building experience. The game is designed to be fun and engaging, encouraging creativity and exploration. Let the sky be your canvas!
 
 ## Features
 
