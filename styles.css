@@ -27,6 +27,24 @@ body {
     
 }
 
+.parallel-line {
+    width: 10px; /* Width of the lines */
+    height: 40px; /* Height of the lines */
+    background-color: white; /* Color of the lines */
+    position: absolute;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for centering */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.parallel-line:first-child {
+    left: calc(50% - 10px); /* Position the first line to the left */
+}
+
+.parallel-line:last-child {
+    left: calc(50% + 10px); /* Position the second line to the right */
+}
+
 .plus-icon-container {
     position: fixed;
     bottom: 20px;
@@ -75,7 +93,7 @@ body {
     transform: translateX(-50%);
 }
 
-/* Hover effects */
+
 .plus-icon-container.hover .rounded-square {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
     transform: scale(1.1);
@@ -84,6 +102,99 @@ body {
 .plus-icon-container.hover .line {
     box-shadow: 0 0 8px rgba(255, 255, 255, 1);
 }
+
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.tutorial-content {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#close-tutorial {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #9b0e0e;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#close-tutorial:hover {
+    transform: scale(1.1);
+    background-color: #d50000;
+}
+.play-icon-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    z-index: 1000;
+}
+.play-square {
+    width: 100%;
+    height: 100%;
+    border: 3px solid white;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+.play-icon {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent; 
+    border-right: 20px solid transparent; 
+    border-bottom: 34.64101px solid white; 
+    position: absolute;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition: all 0.3s ease; 
+}
+.rotate > *:not(.play-icon-container):not(.plus-icon-container) {
+    animation: rotate 4s linear infinite;
+}
+.rotate .line {
+    position: absolute;
+}
+.play-icon-container.hover .play-square {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 1);
+}
+
+.play-icon-container.hover .parallel-line {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 1);
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 
 

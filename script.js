@@ -3,7 +3,7 @@ const lineElement = document.getElementById("line")
 document.body.appendChild(starsContainer);
 document.body.appendChild(lineElement);
 const stars = [];
-const totalStars = 30;
+const totalStars = window.innerWidth < 600 ? 5 : 30;
 // Add a Map to store star positions
 
 const starPositions = new Map();
@@ -51,19 +51,97 @@ plusIconContainer.addEventListener('mouseout', () => {
 
 // Add click event to plusIconContainer to create a star
 plusIconContainer.addEventListener('click', () => {
+    createStarAtCenter(); // Create star at the center of the screen
+});
+
+// Create the play icon container
+const playIconContainer = document.createElement('div');
+playIconContainer.className = 'play-icon-container';
+
+// Create the rounded square background for the play icon
+const playRoundedSquare = document.createElement('div');
+playRoundedSquare.className = 'play-square';
+
+// Create the play icon (triangle)
+const playIcon = document.createElement('div');
+playIcon.className = 'play-icon';
+
+// Create two parallel lines
+const line1 = document.createElement('div');
+line1.className = 'line parallel-line';
+const line2 = document.createElement('div');
+line2.className = 'line parallel-line';
+
+// Function to toggle between triangle and lines
+function togglePlayIcon(isRotating) {
+    // Clear previous content
+    playRoundedSquare.innerHTML = '';
+
+    if (isRotating) {
+        // Append lines when rotating
+        playRoundedSquare.appendChild(line1);
+        playRoundedSquare.appendChild(line2);
+    } else {
+        // Append triangle when not rotating
+        playRoundedSquare.appendChild(playIcon);
+    }
+}
+
+// Position the play icon in the bottom right corner
+playIconContainer.style.position = 'fixed';
+playIconContainer.style.bottom = '20px';
+playIconContainer.style.right = '20px';
+playIconContainer.style.cursor = 'pointer';
+playIconContainer.style.zIndex = '1000'; // Ensure it's on top
+
+// Add click event to playIconContainer to toggle rotation
+let isRotating = false;
+playIconContainer.addEventListener('click', () => {
+    isRotating = !isRotating;
+    if (isRotating) {
+        document.body.classList.add('rotate');
+    } else {
+        document.body.classList.remove('rotate');
+    }
+    togglePlayIcon(isRotating); // Toggle between triangle and lines
+});
+
+// Append the rounded square to the play icon container
+playRoundedSquare.appendChild(playIcon); // Initially add the triangle
+playIconContainer.appendChild(playRoundedSquare); // Append the square to the container
+document.body.appendChild(playIconContainer); // Finally, append the container to the body
+
+// Initially set the play icon to the triangle
+togglePlayIcon(isRotating);
+
+// Function to create a star at the center of the screen
+function createStarAtCenter() {
+    const starContainer = document.createElement('div');
+    starContainer.className = 'star-container';
+    document.body.appendChild(starContainer); // Append the container to the body
+
     const star = document.createElement('div');
     star.className = 'star';
     star.style.position = 'absolute';
-    star.style.top = '50%';
-    star.style.left = '50%'; 
-    star.style.transform = 'translate(-50%, -50%)';
+    star.style.top = '50%'; // Center vertically
+    star.style.left = '50%'; // Center horizontally
+    star.style.transform = 'translate(-50%, -50%)'; // Adjust for centering
     star.style.backgroundColor = 'red'; 
     star.style.borderRadius = '50%';
-    star.style.width = '15px'; 
-    star.style.height = '15px'; 
+
+    // Adjust size based on mobile or desktop
+    if (window.innerWidth < 600) {
+        star.style.width = '18px'; 
+        star.style.height = '18px'; 
+    } else {
+        star.style.width = '15px'; 
+        star.style.height = '15px'; 
+    }
     star.style.boxShadow = '0 0 10px red'; 
 
-    document.body.appendChild(star);
+    starContainer.appendChild(star); // Append the star to its container
+
+    document.body.appendChild(starContainer); // Append the container to the body
 
     // Make the star glow red for 1 second
     setTimeout(() => {
@@ -71,20 +149,87 @@ plusIconContainer.addEventListener('click', () => {
         star.style.backgroundColor = 'white'; 
     }, 1000);
     makeStarDraggable(star);
+}
 
-    
-});
+// Add CSS for mobile responsiveness
+const style = document.createElement('style');
+style.innerHTML = `
+    .star {
+        touch-action: none; 
+    }
+    .plus-icon-container {
+        touch-action: none; 
+    }
+    @media (max-width: 600px) {
+        .star {
+            width: 10px;
+            height: 10px;
+        }
+        .plus-icon-container {
+            width: 50px;
+            height: 50px;
+        }
+        .play-icon-container{
+            width:50px;
+            height:50px;
+        }
+        .crossed-lines {
+            position: relative;
+            width: 30px;
+            height: 30px;
+        }
+        .play-icon {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 17.32px solid white;
+        }
+        .parallel-line {
+            width: 5px; 
+            height: 20px; 
+        .parallel-line:first-child {
+            left: calc(50% - 3px); 
+        }
 
-// Create stars and position them randomly, avoiding the plus icon
+        .parallel-line:last-child {
+            left: calc(50% + 3px); 
+        }
+    }
+`;
+document.head.appendChild(style);
+
+
+const safeArea = 50; // Define a safe area around the plus icon and play icon
+
+// Function to check if a position is within the safe area of the icons
+function isInSafeArea(top, left, iconRect, safeArea) {
+    const starRect = {
+        top: parseFloat(top),
+        left: parseFloat(left),
+        width: window.innerWidth < 600 ? 18 : 10, 
+        height: window.innerWidth < 600 ? 18 : 10 
+    };
+
+    return !(
+        starRect.left + starRect.width < iconRect.left - safeArea ||
+        starRect.left > iconRect.left + iconRect.width + safeArea ||
+        starRect.top + starRect.height < iconRect.top - safeArea ||
+        starRect.top > iconRect.top + iconRect.height + safeArea
+    );
+}
+
+// Create stars and position them randomly, avoiding the plus and play icons
 for (let i = 0; i < totalStars; i++) {
     const star = document.createElement('div');
     star.className = 'star';
     
     let top, left;
+    const plusIconRect = plusIconContainer.getBoundingClientRect();
+    const playIconRect = playIconContainer.getBoundingClientRect();
+
     do {
         top = `${Math.random() * 100}vh`;
         left = `${Math.random() * 100}vw`;
-    } while (isOverlappingWithPlusIcon(top, left, plusIconCenterX, plusIconCenterY));
+    } while (isInSafeArea(top, left, plusIconRect, safeArea) || isInSafeArea(top, left, playIconRect, safeArea));
 
     star.style.top = top;
     star.style.left = left;
@@ -95,40 +240,29 @@ for (let i = 0; i < totalStars; i++) {
     // Store initial position in Map
     starPositions.set(star.dataset.id, { top, left });
 
-    // Make stars draggable
+    // Set star size based on device type
+    if (window.innerWidth < 600) {
+        star.style.width = '18px'; 
+        star.style.height = '18px'; 
+    } else {
+        star.style.width = '15px'; 
+        star.style.height = '15px'; 
+    }
+    
+
+
     star.addEventListener('mousedown', (e) => {
-        star.style.cursor = 'grabbing'; // Change cursor to grabbing
-        const offsetX = e.clientX - star.getBoundingClientRect().left;
-        const offsetY = e.clientY - star.getBoundingClientRect().top;
+        startDragging(e, star);
+    });
 
-        const onMouseMove = (e) => {
-            const newLeft = `${e.clientX - offsetX}px`;
-            const newTop = `${e.clientY - offsetY}px`;
-            star.style.left = newLeft;
-            star.style.top = newTop;
-            // Update position in Map
-            starPositions.set(star.dataset.id, { top: newTop, left: newLeft });
-            connectNearbyStars(star); // Check for nearby stars while dragging
-        };
-
-        const onMouseUp = () => {
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-            star.style.cursor = 'grab'; 
-            // Check if the star is still connected before removing the line
-            if (!isStarConnected(star)) {
-                removeLine(); // Remove line when dragging stops if not connected
-            }
-        };
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
+    star.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        startDragging(e.touches[0], star); // Use the first touch point
     });
 }
 
 // Connect nearby stars with a line if they are within 200 pixels
 function connectNearbyStars(movingStar) {
-    
     const movingStarRect = movingStar.getBoundingClientRect();
     const x1 = movingStarRect.left + movingStarRect.width / 2;
     const y1 = movingStarRect.top + movingStarRect.height / 2;
@@ -144,11 +278,17 @@ function connectNearbyStars(movingStar) {
         
         // Remove existing line if present
         if (activeConnections.has(connectionKey1)) {
-            document.body.removeChild(activeConnections.get(connectionKey1));
+            const line = activeConnections.get(connectionKey1);
+            if (line.parentNode) { // Check if the line is still in the DOM
+                line.parentNode.removeChild(line);
+            }
             activeConnections.delete(connectionKey1);
         }
         if (activeConnections.has(connectionKey2)) {
-            document.body.removeChild(activeConnections.get(connectionKey2));
+            const line = activeConnections.get(connectionKey2);
+            if (line.parentNode) { // Check if the line is still in the DOM
+                line.parentNode.removeChild(line);
+            }
             activeConnections.delete(connectionKey2);
         }
     });
@@ -171,6 +311,11 @@ function connectNearbyStars(movingStar) {
                 // Create unique connection key
                 const connectionKey = `${movingStarId}-${star.dataset.id}`;
                 
+                // Create a container for the star and its connections
+                const starContainer = document.createElement('div');
+                starContainer.className = 'star-container';
+                document.body.appendChild(starContainer);
+                
                 // Create new line
                 const newLineElement = document.createElement('div');
                 newLineElement.className = 'line';
@@ -185,7 +330,10 @@ function connectNearbyStars(movingStar) {
                 // Add click handler to remove the line
                 newLineElement.addEventListener('click', (e) => {
                     e.stopPropagation(); // Prevent event bubbling
-                    document.body.removeChild(newLineElement);
+                    // Remove the line from the DOM
+                    if (newLineElement.parentNode) { // Check if the line is still in the DOM
+                        newLineElement.parentNode.removeChild(newLineElement);
+                    }
                     activeConnections.delete(connectionKey);
                 });
                 newLineElement.addEventListener('mouseover', () => {
@@ -196,20 +344,23 @@ function connectNearbyStars(movingStar) {
                     newLineElement.style.border = '2px solid white';
                 });
 
-                document.body.appendChild(newLineElement);
+                // Append the line to the star container
+                starContainer.appendChild(newLineElement);
+                starContainer.appendChild(star); // Append the star to the container
 
                 // Store the new connection
                 activeConnections.set(connectionKey, newLineElement);
             }
         }
     });
-
 }
 
 // Update removeLine function to remove all connections for a star
 function removeLine() {
     activeConnections.forEach((line, key) => {
-        document.body.removeChild(line);
+        if (line.parentNode) { // Check if the line is still in the DOM
+            line.parentNode.removeChild(line);
+        }
     });
     activeConnections.clear();
 }
@@ -234,32 +385,12 @@ function isStarConnected(movingStar) {
 } 
 function makeStarDraggable(star) {
     star.addEventListener('mousedown', (e) => {
-        star.style.cursor = 'grabbing'; // Change cursor to grabbing
-        const offsetX = e.clientX - star.getBoundingClientRect().left;
-        const offsetY = e.clientY - star.getBoundingClientRect().top;
+        startDragging(e, star);
+    });
 
-        const onMouseMove = (e) => {
-            const newLeft = `${e.clientX - offsetX}px`;
-            const newTop = `${e.clientY - offsetY}px`;
-            star.style.left = newLeft;
-            star.style.top = newTop;
-            // Update position in Map
-            starPositions.set(star.dataset.id, { top: newTop, left: newLeft });
-            connectNearbyStars(star); // Check for nearby stars while dragging
-        };
-
-        const onMouseUp = () => {
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-            star.style.cursor = 'grab'; 
-            // Check if the star is still connected before removing the line
-            if (!isStarConnected(star)) {
-                removeLine(); // Remove line when dragging stops if not connected
-            }
-        };
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
+    star.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        startDragging(e.touches[0], star); // Use the first touch point
     });
 
     // Add unique ID to the new star
@@ -268,26 +399,73 @@ function makeStarDraggable(star) {
     starPositions.set(star.dataset.id, { top: star.style.top, left: star.style.left }); // Store initial position
 }
 
-// Function to check if the star overlaps with the plus icon
-function isOverlappingWithPlusIcon(top, left, plusIconCenterX, plusIconCenterY) {
-    const starRect = {
-        top: parseFloat(top),
-        left: parseFloat(left),
-        width: 15, 
-        height: 15 
+
+
+
+// Create the tutorial overlay
+const tutorialOverlay = document.createElement('div');
+tutorialOverlay.className = 'tutorial-overlay';
+tutorialOverlay.innerHTML = `
+    <div class="tutorial-content">
+        <h2>Tutorial</h2>
+        <h3>Welcome to the Constellation Creator Game!</h3>
+        <p>Click on the plus icon to create stars. </p>
+        <p>Drag the stars to connect them.</p>
+        <p>Click on the connections to delete them.</p>
+        <p>Click on the play icon to move the sky.</p>
+        <p>Let the sky be your canvas!</p>
+        <button id="close-tutorial">Close</button>
+    </div>
+`;
+document.body.appendChild(tutorialOverlay);
+
+// Add event listener to close the tutorial
+document.getElementById('close-tutorial').addEventListener('click', () => {
+    document.body.removeChild(tutorialOverlay);
+});
+// Function to handle dragging logic
+function startDragging(touchOrMouseEvent, star) {
+    star.style.cursor = 'grabbing'; // Change cursor to grabbing
+    const offsetX = touchOrMouseEvent.clientX - star.getBoundingClientRect().left;
+    const offsetY = touchOrMouseEvent.clientY - star.getBoundingClientRect().top;
+
+    const onMove = (e) => {
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX; // Use touch or mouse event
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY; // Use touch or mouse event
+        const newLeft = `${clientX - offsetX}px`;
+        const newTop = `${clientY - offsetY}px`;
+        star.style.left = newLeft;
+        star.style.top = newTop;
+        // Update position in Map
+        starPositions.set(star.dataset.id, { top: newTop, left: newLeft });
+        connectNearbyStars(star); // Check for nearby stars while dragging
     };
 
-    const plusIconRect = {
-        top: plusIconCenterY - 25, 
-        left: plusIconCenterX - 25, 
-        width: 50,
-        height: 50
+    const onEnd = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onEnd);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onEnd);
+        star.style.cursor = 'grab'; 
+        // Check if the star is still connected before removing the line
+        if (!isStarConnected(star)) {
+            removeLine(); // Remove line when dragging stops if not connected
+        }
     };
 
-    return !(
-        starRect.left > plusIconRect.left + plusIconRect.width ||
-        starRect.left + starRect.width < plusIconRect.left ||
-        starRect.top > plusIconRect.top + plusIconRect.height ||
-        starRect.top + starRect.height < plusIconRect.top
-    );
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchmove', onMove);
+    document.addEventListener('touchend', onEnd);
 }
+
+// Add hover effect for the play icon container
+playIconContainer.addEventListener('mouseover', () => {
+    playIconContainer.classList.add('hover');
+});
+
+playIconContainer.addEventListener('mouseout', () => {
+    playIconContainer.classList.remove('hover');
+});
+
+
