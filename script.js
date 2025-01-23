@@ -1,46 +1,57 @@
+// Create a container for stars
 const starsContainer = document.createElement('div');
+// Get the line element from the document
 const lineElement = document.getElementById("line")
+// Append the stars container and line element to the body
 document.body.appendChild(starsContainer);
 document.body.appendChild(lineElement);
+// Initialize an array to hold stars
 const stars = [];
+// Set the total number of stars based on the window width
 const totalStars = window.innerWidth < 600 ? 5 : 30;
-// Add a Map to store star positions
 
+// Create a map to hold star positions
 const starPositions = new Map();
-const activeConnections = new Map(); // Store active connection lines
+// Create a map to hold active connections
+const activeConnections = new Map();
 
-// Add this after creating starsContainer
+// Create a container for the plus icon
 const plusIconContainer = document.createElement('div');
 plusIconContainer.className = 'plus-icon-container';
 
-// Create the rounded square background
+// Create a rounded square for the plus icon
 const roundedSquare = document.createElement('div');
 roundedSquare.className = 'rounded-square';
 
-// Create the crossed lines container
+// Create a container for the crossed lines
 const crossedLines = document.createElement('div');
 crossedLines.className = 'crossed-lines';
 
-// Create horizontal and vertical lines
+// Create a horizontal line
 const horizontalLine = document.createElement('div');
 horizontalLine.className = 'line horizontal';
 
+// Create a vertical line
 const verticalLine = document.createElement('div');
 verticalLine.className = 'line vertical';
 
-// Assemble the plus icon
+// Append the horizontal and vertical lines to the crossed lines
 crossedLines.appendChild(horizontalLine);
 crossedLines.appendChild(verticalLine);
+// Append the crossed lines to the rounded square
 roundedSquare.appendChild(crossedLines);
+// Append the rounded square to the plus icon container
 plusIconContainer.appendChild(roundedSquare);
+// Append the plus icon container to the body
 document.body.appendChild(plusIconContainer);
 
-// Get the position of the plus icon
+// Get the bounding rectangle of the plus icon container
 const plusIconRect = plusIconContainer.getBoundingClientRect();
+// Calculate the center of the plus icon
 const plusIconCenterX = plusIconRect.left + plusIconRect.width / 2;
 const plusIconCenterY = plusIconRect.top + plusIconRect.height / 2;
 
-// Add hover effect
+// Add event listeners for the plus icon container
 plusIconContainer.addEventListener('mouseover', () => {
     plusIconContainer.classList.add('hover');
 });
@@ -49,53 +60,50 @@ plusIconContainer.addEventListener('mouseout', () => {
     plusIconContainer.classList.remove('hover');
 });
 
-// Add click event to plusIconContainer to create a star
 plusIconContainer.addEventListener('click', () => {
-    createStarAtCenter(); // Create star at the center of the screen
+    createStarAtCenter();
 });
 
-// Create the play icon container
+// Create a container for the play icon
 const playIconContainer = document.createElement('div');
 playIconContainer.className = 'play-icon-container';
 
-// Create the rounded square background for the play icon
+// Create a rounded square for the play icon
 const playRoundedSquare = document.createElement('div');
 playRoundedSquare.className = 'play-square';
 
-// Create the play icon (triangle)
+// Create a play icon
 const playIcon = document.createElement('div');
 playIcon.className = 'play-icon';
 
-// Create two parallel lines
+// Create two parallel lines for the play icon
 const line1 = document.createElement('div');
 line1.className = 'line parallel-line';
 const line2 = document.createElement('div');
 line2.className = 'line parallel-line';
 
-// Function to toggle between triangle and lines
+// Function to toggle the play icon
 function togglePlayIcon(isRotating) {
-    // Clear previous content
     playRoundedSquare.innerHTML = '';
 
     if (isRotating) {
-        // Append lines when rotating
         playRoundedSquare.appendChild(line1);
         playRoundedSquare.appendChild(line2);
     } else {
-        // Append triangle when not rotating
         playRoundedSquare.appendChild(playIcon);
     }
 }
 
-// Position the play icon in the bottom right corner
+// Set the position of the play icon container
 playIconContainer.style.position = 'fixed';
 playIconContainer.style.bottom = '20px';
 playIconContainer.style.right = '20px';
 playIconContainer.style.cursor = 'pointer';
-playIconContainer.style.zIndex = '1000'; // Ensure it's on top
+playIconContainer.style.zIndex = '1000';
 
-// Add click event to playIconContainer to toggle rotation
+// Initialize the rotation state of the play icon
 let isRotating = false;
+// Add a click event listener to the play icon container
 playIconContainer.addEventListener('click', () => {
     isRotating = !isRotating;
     if (isRotating) {
@@ -103,33 +111,34 @@ playIconContainer.addEventListener('click', () => {
     } else {
         document.body.classList.remove('rotate');
     }
-    togglePlayIcon(isRotating); // Toggle between triangle and lines
+    togglePlayIcon(isRotating);
 });
 
-// Append the rounded square to the play icon container
-playRoundedSquare.appendChild(playIcon); // Initially add the triangle
-playIconContainer.appendChild(playRoundedSquare); // Append the square to the container
-document.body.appendChild(playIconContainer); // Finally, append the container to the body
+// Append the play icon to the play icon container
+playRoundedSquare.appendChild(playIcon);
+playIconContainer.appendChild(playRoundedSquare);
+// Append the play icon container to the body
+document.body.appendChild(playIconContainer);
 
-// Initially set the play icon to the triangle
+// Initialize the play icon state
 togglePlayIcon(isRotating);
 
 // Function to create a star at the center of the screen
 function createStarAtCenter() {
     const starContainer = document.createElement('div');
     starContainer.className = 'star-container';
-    document.body.appendChild(starContainer); // Append the container to the body
+    document.body.appendChild(starContainer);
 
     const star = document.createElement('div');
     star.className = 'star';
     star.style.position = 'absolute';
-    star.style.top = '50%'; // Center vertically
-    star.style.left = '50%'; // Center horizontally
-    star.style.transform = 'translate(-50%, -50%)'; // Adjust for centering
+    star.style.top = '50%';
+    star.style.left = '50%';
+    star.style.transform = 'translate(-50%, -50%)';
     star.style.backgroundColor = 'red'; 
     star.style.borderRadius = '50%';
 
-    // Adjust size based on mobile or desktop
+    // Set the size of the star based on the window width
     if (window.innerWidth < 600) {
         star.style.width = '18px'; 
         star.style.height = '18px'; 
@@ -139,19 +148,22 @@ function createStarAtCenter() {
     }
     star.style.boxShadow = '0 0 10px red'; 
 
-    starContainer.appendChild(star); // Append the star to its container
+    // Append the star to the star container
+    starContainer.appendChild(star);
 
-    document.body.appendChild(starContainer); // Append the container to the body
+    // Append the star container to the body
+    document.body.appendChild(starContainer);
 
-    // Make the star glow red for 1 second
+    // Change the color and shadow of the star after a delay
     setTimeout(() => {
         star.style.boxShadow = '0 0 10px white';
         star.style.backgroundColor = 'white'; 
     }, 1000);
+    // Make the star draggable
     makeStarDraggable(star);
 }
 
-// Add CSS for mobile responsiveness
+// Create a style element for custom styles
 const style = document.createElement('style');
 style.innerHTML = `
     .star {
@@ -195,12 +207,14 @@ style.innerHTML = `
         }
     }
 `;
+// Append the style to the head of the document
 document.head.appendChild(style);
 
 
-const safeArea = 50; // Define a safe area around the plus icon and play icon
+// Set the safe area for stars
+const safeArea = 50;
 
-// Function to check if a position is within the safe area of the icons
+// Function to check if a star is in the safe area
 function isInSafeArea(top, left, iconRect, safeArea) {
     const starRect = {
         top: parseFloat(top),
@@ -217,7 +231,7 @@ function isInSafeArea(top, left, iconRect, safeArea) {
     );
 }
 
-// Create stars and position them randomly, avoiding the plus and play icons
+// Loop to create stars
 for (let i = 0; i < totalStars; i++) {
     const star = document.createElement('div');
     star.className = 'star';
@@ -233,14 +247,11 @@ for (let i = 0; i < totalStars; i++) {
 
     star.style.top = top;
     star.style.left = left;
-    // Add unique ID to each star
     star.dataset.id = `star-${i}`;
     starsContainer.appendChild(star);
     stars.push(star);
-    // Store initial position in Map
     starPositions.set(star.dataset.id, { top, left });
 
-    // Set star size based on device type
     if (window.innerWidth < 600) {
         star.style.width = '18px'; 
         star.style.height = '18px'; 
@@ -251,17 +262,18 @@ for (let i = 0; i < totalStars; i++) {
     
 
 
+    // Add event listeners for the stars
     star.addEventListener('mousedown', (e) => {
         startDragging(e, star);
     });
 
     star.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behavior
-        startDragging(e.touches[0], star); // Use the first touch point
+        e.preventDefault(); 
+        startDragging(e.touches[0], star); 
     });
 }
 
-// Connect nearby stars with a line if they are within 200 pixels
+// Function to connect nearby stars
 function connectNearbyStars(movingStar) {
     const movingStarRect = movingStar.getBoundingClientRect();
     const x1 = movingStarRect.left + movingStarRect.width / 2;
@@ -269,31 +281,28 @@ function connectNearbyStars(movingStar) {
 
     let connections = [];
     
-    // Remove all existing connections for the moving star
     const movingStarId = movingStar.dataset.id;
     stars.forEach(otherStar => {
         const otherStarId = otherStar.dataset.id;
         const connectionKey1 = `${movingStarId}-${otherStarId}`;
         const connectionKey2 = `${otherStarId}-${movingStarId}`;
         
-        // Remove existing line if present
         if (activeConnections.has(connectionKey1)) {
             const line = activeConnections.get(connectionKey1);
-            if (line.parentNode) { // Check if the line is still in the DOM
+            if (line.parentNode) { 
                 line.parentNode.removeChild(line);
             }
             activeConnections.delete(connectionKey1);
         }
         if (activeConnections.has(connectionKey2)) {
             const line = activeConnections.get(connectionKey2);
-            if (line.parentNode) { // Check if the line is still in the DOM
+            if (line.parentNode) { 
                 line.parentNode.removeChild(line);
             }
             activeConnections.delete(connectionKey2);
         }
     });
 
-    // Check for new connections
     stars.forEach(star => {
         if (star !== movingStar) {
             const starRect = star.getBoundingClientRect();
@@ -308,15 +317,12 @@ function connectNearbyStars(movingStar) {
                     distance: Math.round(distance)
                 });
                 
-                // Create unique connection key
                 const connectionKey = `${movingStarId}-${star.dataset.id}`;
                 
-                // Create a container for the star and its connections
                 const starContainer = document.createElement('div');
                 starContainer.className = 'star-container';
                 document.body.appendChild(starContainer);
                 
-                // Create new line
                 const newLineElement = document.createElement('div');
                 newLineElement.className = 'line';
                 newLineElement.style.width = `${distance}px`;
@@ -327,11 +333,9 @@ function connectNearbyStars(movingStar) {
                 newLineElement.style.position = 'absolute';
                 newLineElement.style.cursor = 'pointer'; 
                 
-                // Add click handler to remove the line
                 newLineElement.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent event bubbling
-                    // Remove the line from the DOM
-                    if (newLineElement.parentNode) { // Check if the line is still in the DOM
+                    e.stopPropagation(); 
+                    if (newLineElement.parentNode) { 
                         newLineElement.parentNode.removeChild(newLineElement);
                     }
                     activeConnections.delete(connectionKey);
@@ -344,28 +348,26 @@ function connectNearbyStars(movingStar) {
                     newLineElement.style.border = '2px solid white';
                 });
 
-                // Append the line to the star container
                 starContainer.appendChild(newLineElement);
-                starContainer.appendChild(star); // Append the star to the container
+                starContainer.appendChild(star); 
 
-                // Store the new connection
                 activeConnections.set(connectionKey, newLineElement);
             }
         }
     });
 }
 
-// Update removeLine function to remove all connections for a star
+// Function to remove a line
 function removeLine() {
     activeConnections.forEach((line, key) => {
-        if (line.parentNode) { // Check if the line is still in the DOM
+        if (line.parentNode) { 
             line.parentNode.removeChild(line);
         }
     });
     activeConnections.clear();
 }
 
-// Check if the star is connected to any other star
+// Function to check if a star is connected
 function isStarConnected(movingStar) {
     const movingStarRect = movingStar.getBoundingClientRect();
     const x1 = movingStarRect.left + movingStarRect.width / 2;
@@ -383,26 +385,23 @@ function isStarConnected(movingStar) {
         return false;
     });
 } 
+// Function to make a star draggable
 function makeStarDraggable(star) {
     star.addEventListener('mousedown', (e) => {
         startDragging(e, star);
     });
 
     star.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behavior
-        startDragging(e.touches[0], star); // Use the first touch point
+        e.preventDefault(); 
+        startDragging(e.touches[0], star); 
     });
 
-    // Add unique ID to the new star
-    star.dataset.id = `star-${stars.length}`; // Ensure unique ID
+    star.dataset.id = `star-${stars.length}`; 
     stars.push(star); 
-    starPositions.set(star.dataset.id, { top: star.style.top, left: star.style.left }); // Store initial position
+    starPositions.set(star.dataset.id, { top: star.style.top, left: star.style.left }); 
 }
 
-
-
-
-// Create the tutorial overlay
+// Create a tutorial overlay
 const tutorialOverlay = document.createElement('div');
 tutorialOverlay.className = 'tutorial-overlay';
 tutorialOverlay.innerHTML = `
@@ -417,28 +416,29 @@ tutorialOverlay.innerHTML = `
         <button id="close-tutorial">Close</button>
     </div>
 `;
+// Append the tutorial overlay to the body
 document.body.appendChild(tutorialOverlay);
 
-// Add event listener to close the tutorial
+// Add an event listener to the close button of the tutorial overlay
 document.getElementById('close-tutorial').addEventListener('click', () => {
     document.body.removeChild(tutorialOverlay);
 });
-// Function to handle dragging logic
+
+// Function to start dragging a star
 function startDragging(touchOrMouseEvent, star) {
-    star.style.cursor = 'grabbing'; // Change cursor to grabbing
+    star.style.cursor = 'grabbing'; 
     const offsetX = touchOrMouseEvent.clientX - star.getBoundingClientRect().left;
     const offsetY = touchOrMouseEvent.clientY - star.getBoundingClientRect().top;
 
     const onMove = (e) => {
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX; // Use touch or mouse event
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY; // Use touch or mouse event
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX; 
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY; 
         const newLeft = `${clientX - offsetX}px`;
         const newTop = `${clientY - offsetY}px`;
         star.style.left = newLeft;
         star.style.top = newTop;
-        // Update position in Map
         starPositions.set(star.dataset.id, { top: newTop, left: newLeft });
-        connectNearbyStars(star); // Check for nearby stars while dragging
+        connectNearbyStars(star); 
     };
 
     const onEnd = () => {
@@ -447,9 +447,8 @@ function startDragging(touchOrMouseEvent, star) {
         document.removeEventListener('touchmove', onMove);
         document.removeEventListener('touchend', onEnd);
         star.style.cursor = 'grab'; 
-        // Check if the star is still connected before removing the line
         if (!isStarConnected(star)) {
-            removeLine(); // Remove line when dragging stops if not connected
+            removeLine(); 
         }
     };
 
@@ -459,7 +458,7 @@ function startDragging(touchOrMouseEvent, star) {
     document.addEventListener('touchend', onEnd);
 }
 
-// Add hover effect for the play icon container
+// Add event listeners for the play icon container
 playIconContainer.addEventListener('mouseover', () => {
     playIconContainer.classList.add('hover');
 });

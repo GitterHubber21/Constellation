@@ -28,21 +28,21 @@ body {
 }
 
 .parallel-line {
-    width: 10px; /* Width of the lines */
-    height: 40px; /* Height of the lines */
-    background-color: white; /* Color of the lines */
+    width: 10px; 
+    height: 40px; 
+    background-color: white; 
     position: absolute;
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%); /* Adjust for centering */
+    top: 50%; 
+    transform: translateY(-50%); 
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
 .parallel-line:first-child {
-    left: calc(50% - 10px); /* Position the first line to the left */
+    left: calc(50% - 10px);
 }
 
 .parallel-line:last-child {
-    left: calc(50% + 10px); /* Position the second line to the right */
+    left: calc(50% + 10px); 
 }
 
 .plus-icon-container {
