@@ -1,57 +1,38 @@
-// Create a container for stars
 const starsContainer = document.createElement('div');
-// Get the line element from the document
 const lineElement = document.getElementById("line")
-// Append the stars container and line element to the body
 document.body.appendChild(starsContainer);
 document.body.appendChild(lineElement);
-// Initialize an array to hold stars
 const stars = [];
-// Set the total number of stars based on the window width
 const totalStars = window.innerWidth < 600 ? 5 : 30;
 
-// Create a map to hold star positions
 const starPositions = new Map();
-// Create a map to hold active connections
 const activeConnections = new Map();
 
-// Create a container for the plus icon
 const plusIconContainer = document.createElement('div');
 plusIconContainer.className = 'plus-icon-container';
 
-// Create a rounded square for the plus icon
 const roundedSquare = document.createElement('div');
 roundedSquare.className = 'rounded-square';
 
-// Create a container for the crossed lines
 const crossedLines = document.createElement('div');
 crossedLines.className = 'crossed-lines';
 
-// Create a horizontal line
 const horizontalLine = document.createElement('div');
 horizontalLine.className = 'line horizontal';
 
-// Create a vertical line
 const verticalLine = document.createElement('div');
 verticalLine.className = 'line vertical';
 
-// Append the horizontal and vertical lines to the crossed lines
 crossedLines.appendChild(horizontalLine);
 crossedLines.appendChild(verticalLine);
-// Append the crossed lines to the rounded square
 roundedSquare.appendChild(crossedLines);
-// Append the rounded square to the plus icon container
 plusIconContainer.appendChild(roundedSquare);
-// Append the plus icon container to the body
 document.body.appendChild(plusIconContainer);
 
-// Get the bounding rectangle of the plus icon container
 const plusIconRect = plusIconContainer.getBoundingClientRect();
-// Calculate the center of the plus icon
 const plusIconCenterX = plusIconRect.left + plusIconRect.width / 2;
 const plusIconCenterY = plusIconRect.top + plusIconRect.height / 2;
 
-// Add event listeners for the plus icon container
 plusIconContainer.addEventListener('mouseover', () => {
     plusIconContainer.classList.add('hover');
 });
@@ -64,25 +45,20 @@ plusIconContainer.addEventListener('click', () => {
     createStarAtCenter();
 });
 
-// Create a container for the play icon
 const playIconContainer = document.createElement('div');
 playIconContainer.className = 'play-icon-container';
 
-// Create a rounded square for the play icon
 const playRoundedSquare = document.createElement('div');
 playRoundedSquare.className = 'play-square';
 
-// Create a play icon
 const playIcon = document.createElement('div');
 playIcon.className = 'play-icon';
 
-// Create two parallel lines for the play icon
 const line1 = document.createElement('div');
 line1.className = 'line parallel-line';
 const line2 = document.createElement('div');
 line2.className = 'line parallel-line';
 
-// Function to toggle the play icon
 function togglePlayIcon(isRotating) {
     playRoundedSquare.innerHTML = '';
 
@@ -94,16 +70,13 @@ function togglePlayIcon(isRotating) {
     }
 }
 
-// Set the position of the play icon container
 playIconContainer.style.position = 'fixed';
 playIconContainer.style.bottom = '20px';
 playIconContainer.style.right = '20px';
 playIconContainer.style.cursor = 'pointer';
 playIconContainer.style.zIndex = '1000';
 
-// Initialize the rotation state of the play icon
 let isRotating = false;
-// Add a click event listener to the play icon container
 playIconContainer.addEventListener('click', () => {
     isRotating = !isRotating;
     if (isRotating) {
@@ -114,16 +87,12 @@ playIconContainer.addEventListener('click', () => {
     togglePlayIcon(isRotating);
 });
 
-// Append the play icon to the play icon container
 playRoundedSquare.appendChild(playIcon);
 playIconContainer.appendChild(playRoundedSquare);
-// Append the play icon container to the body
 document.body.appendChild(playIconContainer);
 
-// Initialize the play icon state
 togglePlayIcon(isRotating);
 
-// Function to create a star at the center of the screen
 function createStarAtCenter() {
     const starContainer = document.createElement('div');
     starContainer.className = 'star-container';
@@ -138,7 +107,6 @@ function createStarAtCenter() {
     star.style.backgroundColor = 'red'; 
     star.style.borderRadius = '50%';
 
-    // Set the size of the star based on the window width
     if (window.innerWidth < 600) {
         star.style.width = '18px'; 
         star.style.height = '18px'; 
@@ -148,22 +116,17 @@ function createStarAtCenter() {
     }
     star.style.boxShadow = '0 0 10px red'; 
 
-    // Append the star to the star container
     starContainer.appendChild(star);
 
-    // Append the star container to the body
     document.body.appendChild(starContainer);
 
-    // Change the color and shadow of the star after a delay
     setTimeout(() => {
         star.style.boxShadow = '0 0 10px white';
         star.style.backgroundColor = 'white'; 
     }, 1000);
-    // Make the star draggable
     makeStarDraggable(star);
 }
 
-// Create a style element for custom styles
 const style = document.createElement('style');
 style.innerHTML = `
     .star {
@@ -207,14 +170,11 @@ style.innerHTML = `
         }
     }
 `;
-// Append the style to the head of the document
 document.head.appendChild(style);
 
 
-// Set the safe area for stars
 const safeArea = 50;
 
-// Function to check if a star is in the safe area
 function isInSafeArea(top, left, iconRect, safeArea) {
     const starRect = {
         top: parseFloat(top),
@@ -231,7 +191,6 @@ function isInSafeArea(top, left, iconRect, safeArea) {
     );
 }
 
-// Loop to create stars
 for (let i = 0; i < totalStars; i++) {
     const star = document.createElement('div');
     star.className = 'star';
@@ -262,7 +221,6 @@ for (let i = 0; i < totalStars; i++) {
     
 
 
-    // Add event listeners for the stars
     star.addEventListener('mousedown', (e) => {
         startDragging(e, star);
     });
@@ -273,7 +231,6 @@ for (let i = 0; i < totalStars; i++) {
     });
 }
 
-// Function to connect nearby stars
 function connectNearbyStars(movingStar) {
     const movingStarRect = movingStar.getBoundingClientRect();
     const x1 = movingStarRect.left + movingStarRect.width / 2;
@@ -357,7 +314,6 @@ function connectNearbyStars(movingStar) {
     });
 }
 
-// Function to remove a line
 function removeLine() {
     activeConnections.forEach((line, key) => {
         if (line.parentNode) { 
@@ -367,7 +323,6 @@ function removeLine() {
     activeConnections.clear();
 }
 
-// Function to check if a star is connected
 function isStarConnected(movingStar) {
     const movingStarRect = movingStar.getBoundingClientRect();
     const x1 = movingStarRect.left + movingStarRect.width / 2;
@@ -385,7 +340,7 @@ function isStarConnected(movingStar) {
         return false;
     });
 } 
-// Function to make a star draggable
+
 function makeStarDraggable(star) {
     star.addEventListener('mousedown', (e) => {
         startDragging(e, star);
@@ -401,7 +356,6 @@ function makeStarDraggable(star) {
     starPositions.set(star.dataset.id, { top: star.style.top, left: star.style.left }); 
 }
 
-// Create a tutorial overlay
 const tutorialOverlay = document.createElement('div');
 tutorialOverlay.className = 'tutorial-overlay';
 tutorialOverlay.innerHTML = `
@@ -416,15 +370,13 @@ tutorialOverlay.innerHTML = `
         <button id="close-tutorial">Close</button>
     </div>
 `;
-// Append the tutorial overlay to the body
+
 document.body.appendChild(tutorialOverlay);
 
-// Add an event listener to the close button of the tutorial overlay
 document.getElementById('close-tutorial').addEventListener('click', () => {
     document.body.removeChild(tutorialOverlay);
 });
 
-// Function to start dragging a star
 function startDragging(touchOrMouseEvent, star) {
     star.style.cursor = 'grabbing'; 
     const offsetX = touchOrMouseEvent.clientX - star.getBoundingClientRect().left;
@@ -458,7 +410,6 @@ function startDragging(touchOrMouseEvent, star) {
     document.addEventListener('touchend', onEnd);
 }
 
-// Add event listeners for the play icon container
 playIconContainer.addEventListener('mouseover', () => {
     playIconContainer.classList.add('hover');
 });
@@ -466,5 +417,4 @@ playIconContainer.addEventListener('mouseover', () => {
 playIconContainer.addEventListener('mouseout', () => {
     playIconContainer.classList.remove('hover');
 });
-
 
