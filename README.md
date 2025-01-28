@@ -1,3 +1,6 @@
+I found out that I can't use AI to help me write the README and comment my code, so I removed everything written by AI from the repository.  
+
+
 # Constellation Creating Game
 
 Welcome to the Constellation Creating Game! This interactive web application allows users to create and connect stars in a virtual space, simulating a constellation-creator experience. The game is designed to be fun and engaging, encouraging creativity and exploration. Let the sky be your canvas!
